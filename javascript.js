@@ -14,13 +14,13 @@
   var database = firebase.database();
 
   // 2. Button for adding train times
-$("#add-employee-btn").on("click", function(event) {
+$("#traintimes").on("click", function(event) {
     event.preventDefault();
   
     // Grabs user input
     var trainName = $("#train-name").val().trim();
     var destination = $("#destination").val().trim();
-    var firstInput = moment($("#first-train").val().trim(), "HH:mm a").subtract(1, "years").format("X");;
+    var firstInput = moment($("#first-train").val().trim(), "HH:mm").subtract(1, "years").format("X");
     var frequency = $("#frequency").val().trim();
   
     // Creates local "temporary" object for holding employee data
@@ -58,22 +58,14 @@ $("#add-employee-btn").on("click", function(event) {
     var firstInput = childSnapshot.val().firstInput;
     var frequency = childSnapshot.val().frequency;
   
-    // Employee Info
     console.log(frequency);
     console.log(firstInput);
 
-    // First Time (pushed back 1 year to make sure it comes before current time)
-    var firstTimeConverted = moment(firstInput, "HH:mm a");
-    console.log(firstTimeConverted);
-
-    // Current Time
-    var currentTime = moment();
-    // console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
 
     // Difference between the times
-    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-    // var diffTime = moment().diff(moment(firstInput), "minutes");
-    var tRemainder = diffTime % frequency;
+    var diffTime = moment().diff(moment.unix(firstInput), "minutes");
+
+    var tRemainder = moment().diff(moment.unix(firstInput), "minutes") % frequency;
     console.log(tRemainder);
 
     // Minute Until Train
